@@ -29,14 +29,13 @@ visualization program.
 """
 from pyworkflow.viewer import ProtocolViewer, DESKTOP_TKINTER, WEB_DJANGO
 from pyworkflow.em import *
-from pyworkflow.gui.text import *
-from pyworkflow.gui.dialog import showError, showWarning
+# from pyworkflow.gui.text import *
+# from pyworkflow.gui.dialog import showError, showWarning
 from pyworkflow.gui.plotter import Plotter
-import glob
+# import glob
 
-from protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
+from atsas.protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
 
-import atsas
 
 class AtsasViewer(Viewer):
     """ Wrapper to visualize Pdb to SAXS. """
@@ -50,19 +49,20 @@ class AtsasViewer(Viewer):
         cls = type(obj)
         if issubclass(cls, AtsasProtConvertPdbToSAXS):
             if obj.experimentalSAXS.empty():
-                fnInt=obj._getPath("pseudoatoms00.int")
+                fnInt = obj._getPath("pseudoatoms00.int")
             else:
-                fnInt=obj._getPath("pseudoatoms00.fit")
-            
+                fnInt = obj._getPath("pseudoatoms00.fit")
+
             import numpy
-            x=numpy.loadtxt(fnInt,skiprows=1)
+            x = numpy.loadtxt(fnInt, skiprows=1)
             xplotter = Plotter(windowTitle="SAXS Curves")
-            a = xplotter.createSubPlot('SAXS curves', 'Angstrongs^-1', 'log(SAXS)', yformat=False)
-            a.plot(x[:,0], numpy.log(x[:,1]))
-            a.plot(x[:,0], numpy.log(x[:,2]))
+            a = xplotter.createSubPlot('SAXS curves', 'Angstroms^-1',
+                                       'log(SAXS)', yformat=False)
+            a.plot(x[:, 0], numpy.log(x[:, 1]))
+            a.plot(x[:, 0], numpy.log(x[:, 3]))
             if obj.experimentalSAXS.empty():
-                xplotter.showLegend(['SAXS in solution','SAXS in vacuo'])
+                xplotter.showLegend(['SAXS in solution', 'SAXS in vacuo'])
             else:
-                xplotter.showLegend(['Experimental SAXS','SAXS from volume'])
+                xplotter.showLegend(['Experimental SAXS', 'SAXS from volume'])
             xplotter.show()
-        
+
