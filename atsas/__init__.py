@@ -2,6 +2,7 @@
 # *
 # * Authors:     Carlos Oscar Sorzano (coss@cnb.csic.es)
 # *
+# *
 # * Unidad de  Bioinformatica of Centro Nacional de Biotecnologia , CSIC
 # *
 # * This program is free software; you can redistribute it and/or modify
@@ -30,20 +31,50 @@ wrapping ATSAS programs http://www.embl-hamburg.de/biosaxs/software.html
 from pyworkflow.utils import commandExists
 
 _logo = "atsas_logo.gif"
-CRYSOL = "crysol"
-from bibtex import _bibtex # Load bibtex dict with references
-from atsas import *
-from protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
-from viewer import AtsasViewer
 
-def validateInstallation():
-    """ This function will be used to check if ATSAS is properly installed. """
-    missingPaths = []
+import os
+import pyworkflow.em
 
-    if not (commandExists(CRYSOL)):
-        missingPaths.append("%s not found in the system" % CRYSOL)
+from pyworkflow.utils import Environ
+from atsas.bibtex import _bibtex # Load bibtex dict with references
+from atsas.protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
+from atsas.viewers import AtsasViewer
+from atsas.constants import CRYSOL, ATSAS_HOME, V2_8_2
 
-    if missingPaths:
-        return ["Missing variables:"] + missingPaths
-    else:
-        return [] # No errors
+
+class Plugin(pyworkflow.em.Plugin):
+    _homeVar = ATSAS_HOME
+
+
+    @classmethod
+    def _defineVariables(cls):
+        cls._defineEmVar(ATSAS_HOME, 'crysol-2.8.2')
+
+    @classmethod
+    def getEnviron(cls):
+        """ Setup the environment variables needed to launch emx export. """
+        environ = Environ(os.environ)
+
+        environ.update({
+            'PATH': Plugin.getHome(),
+            'LD_LIBRARY_PATH': str.join(cls.getHome(), 'atsaslib')
+                               + ":" + cls.getHome(),
+        }, position=Environ.BEGIN)
+
+        return environ
+
+    @classmethod
+    def isVersionActive(cls):
+        return cls.getActiveVersion().startswith(V2_8_2)
+
+    @classmethod
+    def defineBinaries(cls, env):
+        pass
+
+
+pyworkflow.em.Domain.registerPlugin(__name__)
+
+
+
+
+
