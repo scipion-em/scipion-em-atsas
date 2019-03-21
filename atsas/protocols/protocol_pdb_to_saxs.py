@@ -51,7 +51,7 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
     # --------------------------- DEFINE param functions ------------------------
     def _defineParams(self, form):
         form.addSection(label='Input')
-        form.addParam('inputStructure', PointerParam, pointerClass='PdbFile',
+        form.addParam('inputStructure', PointerParam, pointerClass='AtomStruct',
                       label="Input structure", important=True)
         form.addParam('numberOfSamples', IntParam, default=256,
                       expertLevel=LEVEL_ADVANCED,
