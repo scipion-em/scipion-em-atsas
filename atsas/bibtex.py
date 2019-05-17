@@ -25,11 +25,6 @@
 # *
 # **************************************************************************
 """
-Bibtex string file for Xmipp package.
-"""
-
-_bibtexStr = """
-
 
 @article{Svergun1995,
 title = "Crysol-A program to evaluate X-ray solution scattering of biological macromolecules from atomic coordinates",
@@ -45,6 +40,3 @@ keywords = "SAXS simulation, Small Angle X-ray Scattering"
 }
 """
 
-from pyworkflow.utils import parseBibTex
-
-_bibtex = parseBibTex(_bibtexStr)  

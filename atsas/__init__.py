@@ -36,7 +36,6 @@ import os
 import pyworkflow.em
 
 from pyworkflow.utils import Environ
-from atsas.bibtex import _bibtex # Load bibtex dict with references
 from atsas.protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
 from atsas.viewers import AtsasViewer
 from atsas.constants import CRYSOL, ATSAS_HOME, V2_8_2
