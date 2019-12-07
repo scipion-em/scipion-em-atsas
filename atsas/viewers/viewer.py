@@ -27,12 +27,8 @@
 This module implement the wrappers aroung Xmipp CL2D protocol
 visualization program.
 """
-from pyworkflow.viewer import ProtocolViewer, DESKTOP_TKINTER, WEB_DJANGO
-from pyworkflow.em import *
-# from pyworkflow.gui.text import *
-# from pyworkflow.gui.dialog import showError, showWarning
+from pyworkflow.viewer import (DESKTOP_TKINTER, WEB_DJANGO, Viewer)
 from pyworkflow.gui.plotter import Plotter
-# import glob
 
 from atsas.protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
 

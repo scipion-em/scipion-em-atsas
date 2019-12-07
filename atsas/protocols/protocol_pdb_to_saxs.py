@@ -25,14 +25,17 @@
 # **************************************************************************
 
 import math
+import subprocess
+
 import numpy
 
-from pyworkflow.em import *
+from pwem.protocols import ProtPreprocessVolumes, PointerParam
+from pyworkflow.protocol import IntParam, FloatParam, FileParam, StringParam
+
 from atsas.constants import CRYSOL
 from pyworkflow.utils import *
 from pyworkflow.protocol.constants import LEVEL_ADVANCED
 from pyworkflow.utils.path import createLink
-import commands
 
 
 # TODO: Move to 3D Tools
@@ -162,7 +165,7 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
 
     def _warnings(self):
         warnings = []
-        text = commands.getoutput("crysol --version")
+        text = subprocess.getoutput("crysol --version")
         version = text[14:19]
         if version != '2.8.2':
             warnings.append('Warning: Crysol was tested with version 2.8.2 and '

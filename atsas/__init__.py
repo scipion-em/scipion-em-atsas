@@ -33,15 +33,14 @@ from pyworkflow.utils import commandExists
 _logo = "atsas_logo.gif"
 
 import os
-import pyworkflow.em
+import pwem
 
 from pyworkflow.utils import Environ
 from atsas.protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
-from atsas.viewers import AtsasViewer
 from atsas.constants import CRYSOL, ATSAS_HOME, V2_8_2
 
 
-class Plugin(pyworkflow.em.Plugin):
+class Plugin(pwem.Plugin):
     _homeVar = ATSAS_HOME
 
 
@@ -71,7 +70,7 @@ class Plugin(pyworkflow.em.Plugin):
         pass
 
 
-pyworkflow.em.Domain.registerPlugin(__name__)
+pwem.Domain.registerPlugin(__name__)
 
 
 
