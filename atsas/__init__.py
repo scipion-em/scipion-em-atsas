@@ -70,9 +70,6 @@ class Plugin(pwem.Plugin):
         pass
 
 
-pwem.Domain.registerPlugin(__name__)
-
-
 
 
 
