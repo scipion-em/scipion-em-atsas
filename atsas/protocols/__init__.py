@@ -25,4 +25,4 @@
 # **************************************************************************
 
 
-from protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
+from .protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS

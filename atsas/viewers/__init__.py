@@ -24,4 +24,4 @@
 # *
 # **************************************************************************
 
-from viewer import AtsasViewer
+from .viewer import AtsasViewer
