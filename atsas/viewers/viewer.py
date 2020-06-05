@@ -6,7 +6,7 @@
 # *
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
-# * the Free Software Foundation; either version 2 of the License, or
+# * the Free Software Foundation; either version 3 of the License, or
 # * (at your option) any later version.
 # *
 # * This program is distributed in the hope that it will be useful,
@@ -23,18 +23,11 @@
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
 # **************************************************************************
-"""
-This module implement the wrappers aroung Xmipp CL2D protocol
-visualization program.
-"""
-from pyworkflow.viewer import ProtocolViewer, DESKTOP_TKINTER, WEB_DJANGO
-from pyworkflow.em import *
-# from pyworkflow.gui.text import *
-# from pyworkflow.gui.dialog import showError, showWarning
-from pyworkflow.gui.plotter import Plotter
-# import glob
 
-from atsas.protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
+from pyworkflow.viewer import (DESKTOP_TKINTER, WEB_DJANGO, Viewer)
+from pyworkflow.gui.plotter import Plotter
+
+from ..protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
 
 
 class AtsasViewer(Viewer):
@@ -65,4 +58,3 @@ class AtsasViewer(Viewer):
             else:
                 xplotter.showLegend(['Experimental SAXS', 'SAXS from volume'])
             xplotter.show()
-

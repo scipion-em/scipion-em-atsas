@@ -1,4 +1,3 @@
-
 # **************************************************************************
 # *
 # * Authors:  Yunior C. Fonseca Reyna (coss@cnb.csic.es), Aug 2018
@@ -7,7 +6,7 @@
 # *
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
-# * the Free Software Foundation; either version 2 of the License, or
+# * the Free Software Foundation; either version 3 of the License, or
 # * (at your option) any later version.
 # *
 # * This program is distributed in the hope that it will be useful,
@@ -25,11 +24,8 @@
 # *
 # **************************************************************************
 
-# Constants
-
 ATSAS_HOME = 'ATSAS_HOME'
-CRYSOL = "crysol"
-
 
 # Supported version
 V2_8_2 = '2.8.2'
+V3_0_1 = '3.0.1'

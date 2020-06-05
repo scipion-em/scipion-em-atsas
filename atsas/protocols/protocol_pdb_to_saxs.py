@@ -6,7 +6,7 @@
 # *
 # * This program is free software; you can redistribute it and/or modify
 # * it under the terms of the GNU General Public License as published by
-# * the Free Software Foundation; either version 2 of the License, or
+# * the Free Software Foundation; either version 3 of the License, or
 # * (at your option) any later version.
 # *
 # * This program is distributed in the hope that it will be useful,
@@ -24,16 +24,15 @@
 # *
 # **************************************************************************
 
-import math
 import numpy
 
-from pyworkflow.em import *
-from atsas.constants import CRYSOL
+from pwem.protocols import ProtPreprocessVolumes, PointerParam
+from pyworkflow.protocol import IntParam, FloatParam, FileParam, StringParam
 from pyworkflow.utils import *
 from pyworkflow.protocol.constants import LEVEL_ADVANCED
 from pyworkflow.utils.path import createLink
-import commands
 
+from atsas import Plugin
 
 # TODO: Move to 3D Tools
 
@@ -48,10 +47,11 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
     """
     _label = 'convert PDB to SAXS curve'
 
-    # --------------------------- DEFINE param functions ------------------------
+    # --------------------------- DEFINE param functions ----------------------
     def _defineParams(self, form):
         form.addSection(label='Input')
-        form.addParam('inputStructure', PointerParam, pointerClass='AtomStruct',
+        form.addParam('inputStructure', PointerParam,
+                      pointerClass='AtomStruct',
                       label="Input structure", important=True)
         form.addParam('numberOfSamples', IntParam, default=256,
                       expertLevel=LEVEL_ADVANCED,
@@ -66,7 +66,8 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
                       label='Number of harmonics',
                       help='Number of harmonics to generate the curve '
                            '(parameter lm)')
-        form.addParam('experimentalSAXS', FileParam, filter="*.dat", default='',
+        form.addParam('experimentalSAXS', FileParam, filter="*.dat",
+                      default='',
                       label='Experimental SAXS curve (optional)',
                       help="This parameter is optional. If it is given the "
                            "simulated SAXS curve will be compared to the "
@@ -75,12 +76,12 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
                       label='Other parameters for Crysol',
                       help='See http://www.embl-hamburg.de/biosaxs/manuals/crysol.html')
 
-        # --------------------------- INSERT steps functions ------------------------
+    # --------------------------- INSERT steps functions ----------------------
 
     def _insertAllSteps(self):
         self._insertFunctionStep('crysolWrapper')
 
-    # --------------------------- STEPS functions -------------------------------
+    # --------------------------- STEPS functions -----------------------------
     def crysolWrapper(self):
         experimentalSAXS = ""
         if self.experimentalSAXS.get() != "":
@@ -92,7 +93,7 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
             createLink(experimentalSAXS, 'experimental_SAXS_curve.dat')
             experimentalSAXS = 'experimental_SAXS_curve.dat'
         createLink(inputStructure, 'pseudoatoms.pdb')
-        self.runJob(CRYSOL,
+        self.runJob(Plugin.getProgram('crysol'),
                     "pseudoatoms.pdb %s -lm %d -sm %f -ns %d %s"
                     % (experimentalSAXS, self.numberOfHarmonics,
                        self.maximumFrequency, self.numberOfSamples,
@@ -102,8 +103,7 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
             self.runJob("mv", "*alm extra")
         self._leaveWorkingDir()
 
-        # --------------------------- INFO functions --------------------------------
-
+    # --------------------------- INFO functions ------------------------------
     def _summary(self):
         summary = []
         summary.append('Number of samples: %d' % self.numberOfSamples)
@@ -118,7 +118,7 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
             summary.append('Other crysol parameters: %s' % self.otherCrysol)
 
         # Goodness of fit
-        fnInt = self._getPath("pseudoatoms00.fit")
+        fnInt = self._getPath("pseudoatoms00.int")
 
         if exists(fnInt):
             x = numpy.loadtxt(fnInt, skiprows=1)
@@ -127,16 +127,6 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
             RMS = math.sqrt(
                 1.0 / numpy.sum(idx) * numpy.dot(diff[idx], diff[idx]))
             summary.append("RMS=%f" % RMS)
-
-        # Goodness of fit
-        fnChi = self._getExtraPath("crysol_summary.txt")
-        if exists(fnChi):
-            fnChiTxt = open(fnChi, 'rt')
-            text = fnChiTxt.read()
-            fnChiTxt.close()
-            position = text.find('Chi^2:')
-            chiValue = float(text[position + 6:])
-            summary.append("Chi^2=%f" % chiValue)
 
         return summary
 
@@ -156,16 +146,5 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
 
     def _validate(self):
         errors = []
-        if which('crysol') is '':
-            errors.append('You should have the program crysol in the PATH')
+
         return errors
-
-    def _warnings(self):
-        warnings = []
-        text = commands.getoutput("crysol --version")
-        version = text[14:19]
-        if version != '2.8.2':
-            warnings.append('Warning: Crysol was tested with version 2.8.2 and '
-                            'your version is different.')
-
-        return warnings
