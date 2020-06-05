@@ -2,7 +2,6 @@
 # *
 # * Authors:     Carlos Oscar Sorzano (coss@cnb.csic.es)
 # *
-# *
 # * Unidad de  Bioinformatica of Centro Nacional de Biotecnologia , CSIC
 # *
 # * This program is free software; you can redistribute it and/or modify
@@ -28,48 +27,48 @@
 This sub-package contains data and protocol classes
 wrapping ATSAS programs http://www.embl-hamburg.de/biosaxs/software.html
 """
-from pyworkflow.utils import commandExists
-
-_logo = "atsas_logo.gif"
 
 import os
-import pwem
 
+import pwem
 from pyworkflow.utils import Environ
-from atsas.protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
-from atsas.constants import CRYSOL, ATSAS_HOME, V2_8_2
+
+from atsas.constants import ATSAS_HOME, V2_8_2, V3_0_1
+
+
+_references = ['Svergun1995']
+_logo = "atsas_logo.gif"
 
 
 class Plugin(pwem.Plugin):
     _homeVar = ATSAS_HOME
-
+    _pathVars = [ATSAS_HOME]
+    _supportedVersions = [V2_8_2, V3_0_1]
 
     @classmethod
     def _defineVariables(cls):
-        cls._defineEmVar(ATSAS_HOME, 'crysol-2.8.2')
+        cls._defineEmVar(ATSAS_HOME, 'atsas-3.0.1')
 
     @classmethod
     def getEnviron(cls):
-        """ Setup the environment variables needed to launch emx export. """
         environ = Environ(os.environ)
-
         environ.update({
-            'PATH': Plugin.getHome(),
-            'LD_LIBRARY_PATH': str.join(cls.getHome(), 'atsaslib')
-                               + ":" + cls.getHome(),
+            'PATH': cls.getHome('bin'),
+            'LD_LIBRARY_PATH': cls.getHome('lib')
         }, position=Environ.BEGIN)
 
         return environ
 
     @classmethod
     def isVersionActive(cls):
-        return cls.getActiveVersion().startswith(V2_8_2)
+        return cls.getActiveVersion().startswith(V3_0_1)
 
     @classmethod
     def defineBinaries(cls, env):
         pass
 
-
-
-
-
+    @classmethod
+    def getProgram(cls, binary='crysol'):
+        """ Return the program binary that will be used. """
+        cmd = cls.getHome('bin', binary)
+        return str(cmd)

@@ -65,7 +65,7 @@ setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='3.0.0',  # Required
+    version='3.0.1',  # Required
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
@@ -100,23 +100,23 @@ setup(
     #
     # For a list of valid classifiers, see
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
-    #classifiers=[  # Optional
-        # How mature is this project? Common values are
-        #   3 - Alpha
-        #   4 - Beta
-        #   5 - Production/Stable
-     #   'Development Status :: 3 - Alpha',
+    # classifiers=[  # Optional
+    # How mature is this project? Common values are
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    #   'Development Status :: 3 - Alpha',
 
-        # Indicate who your project is intended for
-     #   'Intended Audience :: Users',
+    # Indicate who your project is intended for
+    #   'Intended Audience :: Users',
 
-        # Pick your license as you wish
-     #   'License :: OSI Approved :: MIT License',
+    # Pick your license as you wish
+    #   'License :: OSI Approved :: MIT License',
 
-        # Specify the Python versions you support here. In particular, ensure
-        # that you indicate whether you support Python 2, Python 3 or both.
-     #   'Programming Language :: Python :: 2.7'
-    #],
+    # Specify the Python versions you support here. In particular, ensure
+    # that you indicate whether you support Python 2, Python 3 or both.
+    #   'Programming Language :: Python :: 2.7'
+    # ],
 
     # This field adds keywords for your project which will appear on the
     # project page. What does your project relate to?
@@ -133,7 +133,7 @@ setup(
     #
     #   py_modules=["my_module"],
     #
-    #packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
+    # packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
     packages=find_packages(),
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
@@ -141,7 +141,7 @@ setup(
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    #install_requires=['peppercorn'],  # Optional
+    # install_requires=['peppercorn'],  # Optional
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
@@ -151,10 +151,10 @@ setup(
     #
     # Similar to `install_requires` above, these must be valid existing
     # projects.
-    #extras_require={  # Optional
+    # extras_require={  # Optional
     #    'dev': ['check-manifest'],
     #    'test': ['coverage'],
-    #},
+    # },
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.
@@ -163,7 +163,7 @@ setup(
     # MANIFEST.in as well.
     # include_package_data=True,
     package_data={  # Optional
-       'atsas': ['atsas_logo.gif', 'protocols.conf'],
+        'atsas': ['atsas_logo.gif', 'protocols.conf'],
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
@@ -171,7 +171,7 @@ setup(
     # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
     #
     # In this case, 'data_file' will be installed into '<sys.prefix>/my_data'
-    #data_files=[('my_data', ['data/data_file'])],  # Optional
+    # data_files=[('my_data', ['data/data_file'])],  # Optional
 
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
@@ -180,12 +180,12 @@ setup(
     #
     # For example, the following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
-    #entry_points={  # Optional
+    # entry_points={  # Optional
     #    'console_scripts': [
     #        'sample=sample:main',
     #    ],
-    #},
-entry_points={
+    # },
+    entry_points={
         'pyworkflow.plugin': 'atsas = atsas'
     },
 )

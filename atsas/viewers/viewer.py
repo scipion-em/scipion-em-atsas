@@ -23,14 +23,11 @@
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
 # **************************************************************************
-"""
-This module implement the wrappers aroung Xmipp CL2D protocol
-visualization program.
-"""
+
 from pyworkflow.viewer import (DESKTOP_TKINTER, WEB_DJANGO, Viewer)
 from pyworkflow.gui.plotter import Plotter
 
-from atsas.protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
+from ..protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
 
 
 class AtsasViewer(Viewer):
@@ -61,4 +58,3 @@ class AtsasViewer(Viewer):
             else:
                 xplotter.showLegend(['Experimental SAXS', 'SAXS from volume'])
             xplotter.show()
-
