@@ -35,7 +35,7 @@ from pyworkflow.utils import Environ
 
 from atsas.constants import ATSAS_HOME, V2_8_2, V3_0_1
 
-
+__version__ = '3.0.2'
 _references = ['Svergun1995']
 _logo = "atsas_logo.gif"
 
