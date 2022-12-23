@@ -1,4 +1,4 @@
-# **************************************************************************
+# *****************************************************************************
 # *
 # * Authors:    Yunior C. Fonseca Reyna (cfonseca@cnb.csic.es)
 # *
@@ -22,7 +22,7 @@
 # *  All comments concerning this program package may be sent to the
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
-# **************************************************************************
+# *****************************************************************************
 
 """A setuptools based setup module.
 See:
@@ -35,6 +35,7 @@ from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
 from os import path
+
 from atsas import __version__
 
 here = path.abspath(path.dirname(__file__))
@@ -101,23 +102,23 @@ setup(
     #
     # For a list of valid classifiers, see
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
-    # classifiers=[  # Optional
-    # How mature is this project? Common values are
-    #   3 - Alpha
-    #   4 - Beta
-    #   5 - Production/Stable
-    #   'Development Status :: 3 - Alpha',
+    classifiers=[  # Optional
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        'Development Status :: 5 - Production/Stable',
+        #   'Development Status :: 3 - Alpha',
 
-    # Indicate who your project is intended for
-    #   'Intended Audience :: Users',
+        # Indicate who your project is intended for
+        #   'Intended Audience :: Users',
 
-    # Pick your license as you wish
-    #   'License :: OSI Approved :: MIT License',
+        # Pick your license as you wish
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
 
-    # Specify the Python versions you support here. In particular, ensure
-    # that you indicate whether you support Python 2, Python 3 or both.
-    #   'Programming Language :: Python :: 2.7'
-    # ],
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
+        'Programming Language :: Python :: 3'
+    ],
 
     # This field adds keywords for your project which will appear on the
     # project page. What does your project relate to?
@@ -186,6 +187,20 @@ setup(
     #        'sample=sample:main',
     #    ],
     # },
+
+    # List additional URLs that are relevant to your project as a dict.
+    #
+    # This field corresponds to the "Project-URL" metadata fields:
+    # https://packaging.python.org/specifications/core-metadata/#project-url-multiple-use
+    #
+    # Examples listed include a pattern for specifying where the package tracks
+    # issues, where the source is hosted, where to say thanks to the package
+    # maintainers, and where to support the project financially. The key is
+    # what's used to render the link text on PyPI.
+    project_urls={  # Optional
+        'Bug Reports': 'https://github.com/scipion-em/scipion-em-atsas/issues',
+        'Source': 'https://github.com/scipion-em/scipion-em-atsas/',
+    },
     entry_points={
         'pyworkflow.plugin': 'atsas = atsas'
     },

@@ -1,6 +1,6 @@
-# **************************************************************************
+# *****************************************************************************
 # *
-# * Authors:  Yunior C. Fonseca Reyna (coss@cnb.csic.es), Aug 2018
+# * Authors:  Yunior C. Fonseca Reyna (coss@cnb.csic.es)
 # *
 # * Unidad de  Bioinformatica of Centro Nacional de Biotecnologia , CSIC
 # *
@@ -22,6 +22,6 @@
 # *  All comments concerning this program package may be sent to the
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
-# **************************************************************************
+# *****************************************************************************
 
 from .protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
