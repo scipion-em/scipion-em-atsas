@@ -48,8 +48,7 @@ volume = "54",
 number = "1",
 pages = "343--355",
 month = "Feb",
-doi = {10.1107/S1600576720013412},
-url = {https://doi.org/10.1107/S1600576720013412},
+doi = {https://dx.doi.org/10.1107/S1600576720013412},
 keywords = {small-angle scattering, data analysis, biological macromolecules, structural modelling, ATSAS},
 }
 
