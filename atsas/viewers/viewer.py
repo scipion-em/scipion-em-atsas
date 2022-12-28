@@ -1,4 +1,4 @@
-# **************************************************************************
+# *****************************************************************************
 # *
 # * Authors:     Carlos Oscar Sorzano (coss@cnb.csic.es)
 # *
@@ -22,9 +22,9 @@
 # *  All comments concerning this program package may be sent to the
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
-# **************************************************************************
+# *****************************************************************************
 
-from pyworkflow.viewer import (DESKTOP_TKINTER, WEB_DJANGO, Viewer)
+from pyworkflow.viewer import DESKTOP_TKINTER, Viewer
 from pyworkflow.gui.plotter import Plotter
 
 from ..protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
@@ -33,7 +33,7 @@ from ..protocols.protocol_pdb_to_saxs import AtsasProtConvertPdbToSAXS
 class AtsasViewer(Viewer):
     """ Wrapper to visualize Pdb to SAXS. """
     _targets = [AtsasProtConvertPdbToSAXS]
-    _environments = [DESKTOP_TKINTER, WEB_DJANGO]
+    _environments = [DESKTOP_TKINTER]
 
     def __init__(self, **args):
         Viewer.__init__(self, **args)
@@ -42,9 +42,9 @@ class AtsasViewer(Viewer):
         cls = type(obj)
         if issubclass(cls, AtsasProtConvertPdbToSAXS):
             if obj.experimentalSAXS.empty():
-                fnInt = obj._getPath("pseudoatoms00.int")
+                fnInt = obj._getExtraPath("pseudoatoms.int")
             else:
-                fnInt = obj._getPath("pseudoatoms00.fit")
+                fnInt = obj._getExtraPath("pseudoatoms_experimental_SAXS_curve.fit")
 
             import numpy
             x = numpy.loadtxt(fnInt, skiprows=1)
@@ -54,7 +54,7 @@ class AtsasViewer(Viewer):
             a.plot(x[:, 0], numpy.log(x[:, 1]))
             a.plot(x[:, 0], numpy.log(x[:, 3]))
             if obj.experimentalSAXS.empty():
-                xplotter.showLegend(['SAXS in solution', 'SAXS in vacuo'])
+                xplotter.showLegend(['SAXS in solution', 'SAXS in vacuum'])
             else:
                 xplotter.showLegend(['Experimental SAXS', 'SAXS from volume'])
             xplotter.show()
