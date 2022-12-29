@@ -1,3 +1,4 @@
+3.1: add ATSAS 3.2.0, some refactoring
 3.0.1:
     - fix summary bug, refactor init
 08-december-2019 Migrated to python3

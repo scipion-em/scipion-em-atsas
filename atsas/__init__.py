@@ -1,4 +1,4 @@
-# **************************************************************************
+# *****************************************************************************
 # *
 # * Authors:     Carlos Oscar Sorzano (coss@cnb.csic.es)
 # *
@@ -22,46 +22,40 @@
 # *  All comments concerning this program package may be sent to the
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
-# **************************************************************************
-"""
-This sub-package contains data and protocol classes
-wrapping ATSAS programs http://www.embl-hamburg.de/biosaxs/software.html
-"""
+# *****************************************************************************
 
 import os
-
 import pwem
 from pyworkflow.utils import Environ
 
-from atsas.constants import ATSAS_HOME, V2_8_2, V3_0_1
+from .constants import *
 
-__version__ = '3.0.2'
-_references = ['Svergun1995']
+__version__ = '3.1'
+_references = ['Manalastas-Cantos2021']
 _logo = "atsas_logo.gif"
 
 
 class Plugin(pwem.Plugin):
     _homeVar = ATSAS_HOME
     _pathVars = [ATSAS_HOME]
-    _supportedVersions = [V2_8_2, V3_0_1]
+    _supportedVersions = [V3_0_1, V3_2_0]
+    _url = "https://www.embl-hamburg.de/biosaxs/software.html"
 
     @classmethod
     def _defineVariables(cls):
-        cls._defineEmVar(ATSAS_HOME, 'atsas-3.0.1')
+        cls._defineEmVar(ATSAS_HOME,
+                         f"atsas-{cls._supportedVersions[-1]}")
 
     @classmethod
     def getEnviron(cls):
         environ = Environ(os.environ)
         environ.update({
+            'ATSAS': cls.getHome(),
             'PATH': cls.getHome('bin'),
             'LD_LIBRARY_PATH': cls.getHome('lib')
         }, position=Environ.BEGIN)
 
         return environ
-
-    @classmethod
-    def isVersionActive(cls):
-        return cls.getActiveVersion().startswith(V3_0_1)
 
     @classmethod
     def defineBinaries(cls, env):
@@ -70,5 +64,4 @@ class Plugin(pwem.Plugin):
     @classmethod
     def getProgram(cls, binary='crysol'):
         """ Return the program binary that will be used. """
-        cmd = cls.getHome('bin', binary)
-        return str(cmd)
+        return cls.getHome('bin', binary)

@@ -1,6 +1,6 @@
-# **************************************************************************
+# *****************************************************************************
 # *
-# * Authors:  Carlos Oscar Sanchez Sorzano (coss@cnb.csic.es), May 2013
+# * Authors:  Carlos Oscar Sanchez Sorzano (coss@cnb.csic.es)
 # *
 # * Unidad de  Bioinformatica of Centro Nacional de Biotecnologia , CSIC
 # *
@@ -22,19 +22,18 @@
 # *  All comments concerning this program package may be sent to the
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
-# **************************************************************************
+# *****************************************************************************
 
+import os
+import math
 import numpy
 
 from pwem.protocols import ProtPreprocessVolumes, PointerParam
-from pyworkflow.protocol import IntParam, FloatParam, FileParam, StringParam
-from pyworkflow.utils import *
-from pyworkflow.protocol.constants import LEVEL_ADVANCED
-from pyworkflow.utils.path import createLink
+from pyworkflow.protocol import (IntParam, FloatParam, FileParam,
+                                 StringParam, LEVEL_ADVANCED)
+import pyworkflow.utils as pwutils
 
-from atsas import Plugin
-
-# TODO: Move to 3D Tools
+from .. import Plugin
 
 
 class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
@@ -53,74 +52,82 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
         form.addParam('inputStructure', PointerParam,
                       pointerClass='AtomStruct',
                       label="Input structure", important=True)
-        form.addParam('numberOfSamples', IntParam, default=256,
+        form.addParam('numberOfSamples', IntParam, default=101,
                       expertLevel=LEVEL_ADVANCED,
-                      label='Number of samples',
-                      help='Number of samples of the curve (parameter ns)')
-        form.addParam('maximumFrequency', FloatParam, default=0.3,
+                      label='Number of data points',
+                      help='Number of calculated data points; '
+                           'default: 101, maximum = 10001.')
+        form.addParam('maximumFrequency', FloatParam, default=0.5,
                       expertLevel=LEVEL_ADVANCED,
-                      label='Maximum frequency (1/A)',
-                      help='Maximum frequency of the curve (parameter sm)')
-        form.addParam('numberOfHarmonics', IntParam, default=18,
+                      label='Maximum scattering angle (freq.)',
+                      help='Maximum scattering angle in inverse angstroms, '
+                           'either for calculating the theoretical curve up '
+                           'to sm or for fitting till sm; default: 0.5Å-1, '
+                           'maximum: 2.0Å-1')
+        form.addParam('numberOfHarmonics', IntParam, default=20,
                       expertLevel=LEVEL_ADVANCED,
                       label='Number of harmonics',
-                      help='Number of harmonics to generate the curve '
-                           '(parameter lm)')
+                      help='Maximum order of harmonics; default: 20, minimum: '
+                           '1, maximum: 100. This defines the resolution of '
+                           'the calculated curve. The default value should be '
+                           'sufficient in most of the cases. For large or '
+                           'extended particles higher orders could improve '
+                           'the results, at the cost of an increased run time. '
+                           'This value must be increased whenever the maximum '
+                           'scattering angle is increased (smax).')
         form.addParam('experimentalSAXS', FileParam, filter="*.dat",
                       default='',
                       label='Experimental SAXS curve (optional)',
-                      help="This parameter is optional. If it is given the "
+                      help="This parameter is optional. If provided the "
                            "simulated SAXS curve will be compared to the "
-                           "experimental one")
+                           "experimental one.")
         form.addParam('otherCrysol', StringParam, default='',
+                      expertLevel=LEVEL_ADVANCED,
                       label='Other parameters for Crysol',
                       help='See http://www.embl-hamburg.de/biosaxs/manuals/crysol.html')
 
     # --------------------------- INSERT steps functions ----------------------
-
     def _insertAllSteps(self):
-        self._insertFunctionStep('crysolWrapper')
+        self._insertFunctionStep(self.crysolWrapper)
 
     # --------------------------- STEPS functions -----------------------------
     def crysolWrapper(self):
-        experimentalSAXS = ""
-        if self.experimentalSAXS.get() != "":
-            experimentalSAXS = os.path.abspath(self.experimentalSAXS.get())
-        inputStructure = os.path.abspath(
-            self.inputStructure.get().getFileName())
-        self._enterWorkingDir()
-        if experimentalSAXS != "":
-            createLink(experimentalSAXS, 'experimental_SAXS_curve.dat')
-            experimentalSAXS = 'experimental_SAXS_curve.dat'
-        createLink(inputStructure, 'pseudoatoms.pdb')
+        inputFn = self.inputStructure.get().getFileName()
+        ext = pwutils.getExt(inputFn)
+        pwutils.createLink(os.path.abspath(inputFn),
+                           self._getTmpPath(f"pseudoatoms{ext}"))
+
+        args = [
+            f"--lm {self.numberOfHarmonics}",
+            f"--smax {self.maximumFrequency}",
+            f"--ns {self.numberOfSamples}",
+            f"{self.otherCrysol}",
+            f"../tmp/pseudoatoms{ext}"
+            ]
+
+        if not self.experimentalSAXS.empty():
+            pwutils.createLink(os.path.abspath(self.experimentalSAXS.get()),
+                               self._getTmpPath("experimental_SAXS_curve.dat"))
+            args.append(f"../tmp/experimental_SAXS_curve.dat")
+
         self.runJob(Plugin.getProgram('crysol'),
-                    "pseudoatoms.pdb %s -lm %d -sm %f -ns %d %s"
-                    % (experimentalSAXS, self.numberOfHarmonics,
-                       self.maximumFrequency, self.numberOfSamples,
-                       self.otherCrysol))
-        self.runJob("mv", "*log *txt extra")
-        if experimentalSAXS == "":
-            self.runJob("mv", "*alm extra")
-        self._leaveWorkingDir()
+                    " ".join(args), cwd=self._getExtraPath())
 
     # --------------------------- INFO functions ------------------------------
     def _summary(self):
         summary = []
-        summary.append('Number of samples: %d' % self.numberOfSamples)
+        summary.append('Number of data points: %d' % self.numberOfSamples)
         summary.append('Maximum frequency: %f' % self.maximumFrequency)
-        summary.append('Number of Harmonics: %d' % self.numberOfHarmonics)
+        summary.append('Number of harmonics: %d' % self.numberOfHarmonics)
 
         if not self.experimentalSAXS.empty():
             summary.append(
                 'Experimental SAXS curve: %s' % self.experimentalSAXS)
 
-        if not self.otherCrysol.empty():
-            summary.append('Other crysol parameters: %s' % self.otherCrysol)
-
         # Goodness of fit
-        fnInt = self._getPath("pseudoatoms00.int")
+        fnInt = self._getExtraPath("pseudoatoms.int")
 
-        if exists(fnInt):
+        if os.path.exists(fnInt):
             x = numpy.loadtxt(fnInt, skiprows=1)
             diff = numpy.log(x[:, 1]) - numpy.log(x[:, 3])
             idx = numpy.isfinite(diff)
@@ -130,21 +137,5 @@ class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
 
         return summary
 
-    def _methods(self):
-        summary = []
-        summary.append('We computed the SAXS curve of the model %s.'
-                       % self.inputStructure.get().getNameId())
-        summary.append('We simulated the SAXS curve using the method described '
-                       'in [Svergun1995] up to a frequency of %f (1/Angstroms),'
-                       ' with %d harmonics and %d samples.'
-                       % (self.maximumFrequency, self.numberOfHarmonics,
-                          self.numberOfSamples))
-        return summary
-
     def _citations(self):
         return ['Svergun1995']
-
-    def _validate(self):
-        errors = []
-
-        return errors

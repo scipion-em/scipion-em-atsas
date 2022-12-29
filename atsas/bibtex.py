@@ -1,5 +1,5 @@
 # coding: latin-1
-# **************************************************************************
+# *****************************************************************************
 # *
 # * Authors:     J.M. De la Rosa Trevin (jmdelarosa@cnb.csic.es)
 # *
@@ -23,7 +23,8 @@
 # *  All comments concerning this program package may be sent to the
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
-# **************************************************************************
+# *****************************************************************************
+
 """
 
 @article{Svergun1995,
@@ -33,9 +34,23 @@ volume = "28",
 number = "6",
 pages = "768 - 773",
 year = "1995",
-doi = "http://dx.doi.org/10.1107/S0021889895007047",
-url = "http://www.embl-hamburg.de/biosaxs/reprints/crysol_1995.pdf",
+doi = "https://dx.doi.org/10.1107/S0021889895007047",
 author = "Svergun, D. and Barberato, C. and Koch, M. H. J.",
 keywords = "SAXS simulation, Small Angle X-ray Scattering"
 }
+
+@article{Manalastas-Cantos2021,
+author = "Manalastas-Cantos, Karen and Konarev, Petr V. and Hajizadeh, Nelly R. and Kikhney, Alexey G. and Petoukhov, Maxim V. and Molodenskiy, Dmitry S. and Panjkovich, Alejandro and Mertens, Haydyn D. T. and Gruzinov, Andrey and Borges, Clemente and Jeffries, Cy M. and Svergun, Dmitri I. and Franke, Daniel",
+title = "{ATSAS 3.0: expanded functionality and new tools for small-angle scattering data analysis}",
+journal = "Journal of Applied Crystallography",
+year = "2021",
+volume = "54",
+number = "1",
+pages = "343--355",
+month = "Feb",
+doi = {https://dx.doi.org/10.1107/S1600576720013412},
+keywords = {small-angle scattering, data analysis, biological macromolecules, structural modelling, ATSAS},
+}
+
+
 """
