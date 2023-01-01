@@ -58,6 +58,10 @@ class Plugin(pwem.Plugin):
         return environ
 
     @classmethod
+    def defineBinaries(cls, env):
+        pass
+
+    @classmethod
     def getProgram(cls, binary='crysol'):
         """ Return the program binary that will be used. """
         return cls.getHome('bin', binary)
