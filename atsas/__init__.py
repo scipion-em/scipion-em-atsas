@@ -39,7 +39,7 @@ class Plugin(pwem.Plugin):
     _homeVar = ATSAS_HOME
     _pathVars = [ATSAS_HOME]
     _supportedVersions = [V3_0_1, V3_2_0]
-    _url = "https://www.embl-hamburg.de/biosaxs/software.html"
+    _url = "https://github.com/scipion-em/scipion-em-atsas"
 
     @classmethod
     def _defineVariables(cls):
