@@ -26,6 +26,7 @@
 
 import os
 import pwem
+from pyworkflow import SPA
 from pyworkflow.utils import Environ
 
 from .constants import *
@@ -39,7 +40,8 @@ class Plugin(pwem.Plugin):
     _homeVar = ATSAS_HOME
     _pathVars = [ATSAS_HOME]
     _supportedVersions = [V3_0_1, V3_2_0]
-    _url = "https://www.embl-hamburg.de/biosaxs/software.html"
+    _url = "https://github.com/scipion-em/scipion-em-atsas"
+    _processingField = [SPA]
 
     @classmethod
     def _defineVariables(cls):
