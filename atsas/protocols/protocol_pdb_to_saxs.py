@@ -37,12 +37,144 @@ from .. import Plugin
 
 
 class AtsasProtConvertPdbToSAXS(ProtPreprocessVolumes):
-    """ Protocol for converting a PDB file (true atoms or pseudoatoms) into a
-    SAXS curve.
+    """
+    Converts an atomic structure or pseudoatomic model into a theoretical SAXS scattering curve using
+    the Crysol program from the ATSAS package. The protocol allows users to simulate small-angle X-ray
+    scattering profiles directly from structural models in order to evaluate how well a proposed
+    structure agrees with solution scattering experiments. This approach is especially useful for
+    validating structural models, comparing conformational states, studying flexible systems, and
+    integrating cryo-EM or atomic modeling workflows with experimental SAXS measurements. More info:
+    https://www.embl-hamburg.de/biosaxs/manuals/crysol.html
 
-    This is actually a wrapper to the program Crysol from Atsas.
-    See documentation at:
-       http://www.embl-hamburg.de/biosaxs/manuals/crysol.html
+    AI Generated:
+
+    Convert PDB to SAXS Curve (AtsasProtConvertPdbToSAXS) - User Manual
+        Overview
+
+        The Convert PDB to SAXS Curve protocol generates theoretical small-angle X-ray scattering
+        profiles from atomic or pseudoatomic structural models. Its main objective is to predict the
+        scattering behavior of a macromolecule in solution and optionally compare the simulated profile
+        against experimental SAXS data. This type of analysis is widely used in structural biology to
+        evaluate whether a structural model is consistent with experimentally observed molecular shapes
+        and conformations in solution.
+
+        In integrative structural biology workflows, SAXS calculations are particularly valuable because
+        they provide low-resolution information about the global organization, flexibility, and overall
+        dimensions of biological assemblies. The protocol is therefore useful not only for validating
+        high-resolution models, but also for studying conformational variability, multidomain proteins,
+        flexible complexes, and assemblies that may adopt multiple states in solution.
+
+        Biological Context and Applications
+
+        SAXS experiments measure the average scattering behavior of particles in solution, making them
+        highly complementary to cryo-EM, crystallography, and computational modeling. While high-resolution
+        methods often capture a single structural state, SAXS reflects the ensemble-averaged behavior of
+        molecules under near-native conditions.
+
+        This protocol is commonly used when evaluating whether a reconstructed model agrees with solution
+        behavior observed experimentally. For example, a cryo-EM structure may appear rigid and compact,
+        whereas the SAXS profile may indicate substantial flexibility or extension in solution. Comparing
+        theoretical and experimental curves can therefore reveal biologically important conformational
+        differences that are not immediately visible from static structural models alone.
+
+        The protocol is also useful during model refinement, flexible fitting, coarse-grained modeling,
+        and pseudoatomic reconstruction workflows. By generating theoretical scattering curves from
+        candidate structures, users can identify which conformations best explain the experimental SAXS
+        observations.
+
+        Input Structures and General Considerations
+
+        The protocol accepts atomic structures or pseudoatomic models as input. In practical workflows,
+        these models may originate from crystallography, cryo-EM fitting, molecular dynamics simulations,
+        or hybrid structural modeling approaches.
+
+        For meaningful SAXS interpretation, users should ensure that the structural model represents a
+        biologically realistic state in solution. Missing flexible regions, unresolved loops, or incorrect
+        oligomeric assemblies can strongly influence the agreement between theoretical and experimental
+        scattering profiles.
+
+        In many biological systems, flexibility plays a central role in SAXS interpretation. A rigid model
+        may fail to reproduce the experimental curve even if the core structure is correct. Therefore,
+        discrepancies between theoretical and experimental profiles should often be interpreted as possible
+        evidence of conformational heterogeneity rather than simply modeling failure.
+
+        Scattering Range and Resolution Considerations
+
+        The maximum scattering frequency determines the highest spatial detail represented in the calculated
+        SAXS curve. Lower ranges emphasize global molecular shape and envelope information, whereas higher
+        frequencies include finer structural details.
+
+        In routine biological applications, moderate scattering ranges are usually sufficient because SAXS
+        inherently provides low-resolution structural information. Increasing the maximum frequency may
+        improve sensitivity to fine features, but it also increases computational demands and may amplify
+        noise or overfitting when comparing to experimental data.
+
+        The number of harmonics controls the complexity and resolution of the theoretical scattering
+        calculation. Compact globular proteins generally require fewer harmonics, while elongated,
+        multidomain, or flexible assemblies may benefit from higher values. However, excessively large
+        values may increase runtime without producing biologically meaningful improvements.
+
+        Number of Data Points and Sampling Density
+
+        The number of calculated data points determines how finely the scattering curve is sampled across
+        the selected angular range. Higher sampling densities provide smoother and more detailed curves,
+        which can be useful when comparing against high-quality experimental measurements.
+
+        For most biological applications, standard sampling values are sufficient to capture the overall
+        behavior of the scattering profile. Extremely dense sampling is generally unnecessary unless users
+        are performing detailed quantitative fitting or benchmarking analyses.
+
+        Comparison with Experimental SAXS Curves
+
+        One of the most important capabilities of the protocol is the optional comparison between the
+        simulated SAXS profile and an experimental scattering curve. This comparison allows users to assess
+        how closely the structural model reproduces the observed experimental behavior.
+
+        In structural biology practice, agreement between theoretical and experimental SAXS curves is often
+        interpreted as evidence that the model captures the global dimensions and organization of the
+        molecule in solution. Poor agreement may indicate conformational flexibility, incorrect assembly
+        stoichiometry, missing domains, unresolved disordered regions, or biologically relevant structural
+        heterogeneity.
+
+        The protocol can also provide quantitative estimates of agreement between theoretical and
+        experimental profiles. Such values are useful for comparing alternative structural hypotheses,
+        evaluating refinement strategies, or selecting among competing models.
+
+        Practical Recommendations
+
+        For routine use, the default calculation settings are typically sufficient for globular proteins
+        and moderately sized complexes. Users studying very large assemblies, elongated particles, or
+        flexible systems may consider increasing the number of harmonics and extending the scattering
+        range cautiously.
+
+        When comparing against experimental data, careful preprocessing of the experimental SAXS curve is
+        essential. Background subtraction, buffer matching, and proper normalization strongly influence the
+        reliability of the comparison. Users should also remember that SAXS reflects solution averages, so
+        biologically relevant flexibility may require ensemble modeling approaches rather than single rigid
+        structures.
+
+        In integrative workflows combining cryo-EM and SAXS, this protocol is especially useful for
+        evaluating whether high-resolution reconstructions remain consistent with the solution behavior of
+        the macromolecule.
+
+        Outputs and Interpretation
+
+        The protocol produces theoretical SAXS scattering profiles that can be visualized and compared with
+        experimental measurements. These curves provide insight into the overall molecular dimensions,
+        compactness, and conformational state of the structure.
+
+        When experimental curves are included, the agreement between theoretical and observed scattering
+        can guide structural interpretation and model validation. Strong agreement generally supports the
+        biological plausibility of the model in solution, whereas systematic deviations may indicate
+        flexibility, conformational changes, or incomplete structural representation.
+
+        Final Perspective
+
+        The generation of theoretical SAXS curves from structural models represents a powerful bridge
+        between computational structural biology and experimental solution scattering. By connecting atomic
+        or pseudoatomic models with experimentally measurable observables, this protocol supports model
+        validation, conformational analysis, and integrative interpretation of biological macromolecules in
+        their native solution environment.
     """
     _label = 'convert PDB to SAXS curve'
 
